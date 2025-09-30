@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_HUB_REPO = 'ndiaye2024'
         DOCKER_HUB_USER = 'ndiaye2024'
-        DOCKER_HUB_PASS = credentials('jenkinauto')
+        DOCKER_HUB_PASS = credentials('jenkinaute')
         '
     }
 
