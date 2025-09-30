@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_HUB_USER = 'ndiaye2024'
         DOCKER_HUB_PASS = credentials('jenkinsauto') // à créer dans Jenkins
-        DOCKER_HUB_REPO = 'ndiaye2024'
+        DOCKER_HUB_REPO = 'ndiaye2024/jenkins'
     }
 
     stages {
