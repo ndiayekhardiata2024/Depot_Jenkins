@@ -3,6 +3,9 @@ pipeline {
 
     environment {
         DOCKER_HUB_REPO = 'ndiaye2024'
+        DOCKER_HUB_USER = 'ndiaye2024'
+        DOCKER_HUB_PASS = credentials('jenkinauto')
+        '
     }
 
     stages {
@@ -28,17 +31,12 @@ pipeline {
             }
         }
 
-      
 
-        stage('Login to DockerHub') {
+        stage('Login DockerHub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'jenkinauto', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh '''
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                    '''
+                sh 'echo $DOCKER_HUB_PASS | docker login -u $DOCKER_HUB_USER --password-stdin'
+            }
         }
-    }
-}
 
         stage('Push Images') {
             steps {
