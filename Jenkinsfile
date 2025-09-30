@@ -3,9 +3,6 @@ pipeline {
 
     environment {
         DOCKER_HUB_REPO = 'ndiaye2024'
-        DOCKER_HUB_USER = 'ndiaye2024'
-        DOCKER_HUB_PASS = credentials('jenkinaute')
-        '
     }
 
     stages {
@@ -32,11 +29,19 @@ pipeline {
         }
 
 
-        stage('Login DockerHub') {
+        stage('Login to DockerHub') {
             steps {
-                sh 'echo $DOCKER_HUB_PASS | docker login -u $DOCKER_HUB_USER --password-stdin'
-            }
+                withCredentials([usernamePassword(credentialsId: 'jenkinaute', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                    '''
         }
+    }
+}
+
+
+
+        
 
         stage('Push Images') {
             steps {
