@@ -1,5 +1,11 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'docker:28.4.0-cli'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+    }
+}
+
 
     environment {
         DOCKER_HUB_USER = 'ndiaye2024'
