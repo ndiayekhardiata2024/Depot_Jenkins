@@ -2,7 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_REPO = 'ndiaye2024/jenkins'
+        DOCKER_HUB_REPO = 'ndiaye2024'
+        DOCKER_HUB = credentials('jenkinauto')
     }
 
     stages {
