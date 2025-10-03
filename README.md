@@ -5,7 +5,7 @@
 Elle permet de gérer une collection de **smartphones** avec un **CRUD complet** et un **ID auto-incrémenté**.  
 
 Le projet inclut un **middleware de sécurité** pour protéger la suppression de données sensibles.
-le projet
+
 ---
 
 ## 📂 Structure du projet
