@@ -8,7 +8,7 @@ Le projet inclut un **middleware de sécurité** pour protéger la suppression d
 
 ---
 
-## 📂 Structure du projet
+## 📂 Structure du projet khardiata
 
 mon-projet-express/
 │── controllers/
