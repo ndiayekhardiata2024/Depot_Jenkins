@@ -8,14 +8,21 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-jenkins', url: 'https://github.com/ndiayekhardiata2024/Depot_Jenkins.git']])
+                checkout scmGit(
+                    branches: [[name: '*/main']],
+                    extensions: [],
+                    userRemoteConfigs: [[
+                        credentialsId: 'github-jenkins',
+                        url: 'https://github.com/ndiayekhardiata2024/Depot_Jenkins.git'
+                    ]]
+                )
             }
         }
 
         stage('Build Backend Image') {
             steps {
                 script {
-                    sh 'docker build -t $DOCKER_HUB_REPO/backend:latest ./mon-projet-express'
+                    sh "docker build -t ${DOCKER_HUB_REPO}/backend:latest ./mon-projet-express"
                 }
             }
         }
@@ -23,31 +30,30 @@ pipeline {
         stage('Build Frontend Image') {
             steps {
                 script {
-                    sh 'docker build -t $DOCKER_HUB_REPO/frontend:latest ./'
+                    sh "docker build -t ${DOCKER_HUB_REPO}/frontend:latest ./"
                 }
             }
         }
 
-
         stage('Login to DockerHub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'jenkinaute', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                withCredentials([usernamePassword(
+                    credentialsId: 'jenkinaute',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
                     sh '''
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                     '''
+                }
+            }
         }
-    }
-}
-
-
-
-        
 
         stage('Push Images') {
             steps {
                 script {
-                    sh 'docker push $DOCKER_HUB_REPO/backend:latest'
-                    sh 'docker push $DOCKER_HUB_REPO/frontend:latest'
+                    sh "docker push ${DOCKER_HUB_REPO}/backend:latest"
+                    sh "docker push ${DOCKER_HUB_REPO}/frontend:latest"
                 }
             }
         }
@@ -63,6 +69,40 @@ pipeline {
     }
 
     post {
+        success {
+            emailext(
+                subject: "✅ BUILD REUSSI - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """<html>
+                    <body>
+                        <p>Bonjour,</p>
+                        <p>Le job <b>${env.JOB_NAME}</b> (build #${env.BUILD_NUMBER}) a été exécuté avec succès.</p>
+                        <p>Consultez les logs ici : <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                    </body>
+                </html>""",
+                to: 'ndiayekhardiata2024@gmail.com',
+                from: 'ndiayekhardiata2024@gmail.com',
+                replyTo: 'ndiayekhardiata2024@gmail.com',
+                mimeType: 'text/html'
+            )
+        }
+
+        failure {
+            emailext(
+                subject: "❌ BUILD ECHOUE - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """<html>
+                    <body>
+                        <p>Bonjour,</p>
+                        <p>Le job <b>${env.JOB_NAME}</b> (build #${env.BUILD_NUMBER}) a échoué.</p>
+                        <p>Consultez les logs ici : <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                    </body>
+                </html>""",
+                to: 'ndiayekhardiata2024@gmail.com',
+                from: 'ndiayekhardiata2024@gmail.com',
+                replyTo: 'ndiayekhardiata2024@gmail.com',
+                mimeType: 'text/html'
+            )
+        }
+
         always {
             sh 'docker logout'
         }
