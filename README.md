@@ -8,7 +8,7 @@ Le projet inclut un **middleware de sécurité** pour protéger la suppression d
 
 ---
 
-## 📂 Structure du projet khardiata AWS S2
+## 📂 Structure du projet khardiata AWS S1
 
 mon-projet-express/
 │── controllers/
