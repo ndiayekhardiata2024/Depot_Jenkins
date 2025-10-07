@@ -10,7 +10,7 @@ pipeline {
        
         stage('Checkout') {
             steps {
-                checkout scmGit(
+                checkout scm(
                     branches: [[name: '*/main']],
                     extensions: [],
                     userRemoteConfigs: [[
