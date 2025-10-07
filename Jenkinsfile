@@ -7,22 +7,7 @@ pipeline {
 
     stages {
 
-         stage('Init Docker Socket') {
-            steps {
-                script {
-                    // S'assurer que Jenkins peut accéder au socket Docker
-                    sh '''
-                    if [ -S /var/run/docker.sock ]; then
-                        echo "🔧 Correction des permissions du socket Docker"
-                        sudo chown root:docker /var/run/docker.sock || true
-                        sudo chmod 660 /var/run/docker.sock || true
-                    else
-                        echo "⚠️ Pas de socket Docker détecté !"
-                    fi
-                    '''
-                }
-            }
-        }       
+       
         stage('Checkout') {
             steps {
                 checkout scmGit(
