@@ -20,7 +20,7 @@ pipeline {
                 withSonarQubeEnv('sonarqube') { // nom du serveur SonarQube
                     withCredentials([string(credentialsId: 'jenkins-token', variable: 'SONAR_TOKEN')]) {
                         sh '''
-                            sonar-scanner \
+                            ${SONAR_SCANNER_HOME}/bin/sonar-scanner \
                             -Dsonar.projectKey=Depot_Jenkins \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=http://localhost:9000 \
