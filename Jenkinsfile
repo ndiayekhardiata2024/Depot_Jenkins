@@ -1,9 +1,7 @@
 pipeline {
     agent any
 
-    tools {
-        sonarQubeScanner 'SonarScanner' // nom du scanner CLI
-    }
+
 
     environment {
         DOCKER_HUB_REPO = 'ndiaye2024'
