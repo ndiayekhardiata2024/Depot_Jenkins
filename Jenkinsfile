@@ -1,8 +1,6 @@
 pipeline {
     agent any
 
-
-
     environment {
         DOCKER_HUB_REPO = 'ndiaye2024'
     }
@@ -15,9 +13,9 @@ pipeline {
             }
         }
 
-       /* stage('Analyse SonarQube') {
+        /* stage('Analyse SonarQube') {
             steps {
-                withSonarQubeEnv('sonarqube') { // nom du serveur SonarQube
+                withSonarQubeEnv('sonarqube') {
                     withCredentials([string(credentialsId: 'jenkins-token', variable: 'SONAR_TOKEN')]) {
                         sh '''
                             sonar-scanner \
@@ -30,6 +28,7 @@ pipeline {
                 }
             }
         }
+
         stage('Quality Gate') {
             steps {
                 timeout(time: 1, unit: 'MINUTES') {
@@ -77,14 +76,25 @@ pipeline {
             }
         }
 
-        stage('Deploy with Docker Compose') {
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh '''
+                    kubectl apply -f k8s/
+                    kubectl rollout status deployment/backend
+                    kubectl rollout status deployment/frontend
+                    kubectl rollout status deployment/mongo
+                '''
+            }
+        }
+
+        /* stage('Deploy with Docker Compose') {
             steps {
                 script {
                     sh 'docker compose down || true'
                     sh 'docker compose up -d'
                 }
             }
-        }
+        }*/
     }
 
     post {
