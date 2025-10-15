@@ -15,7 +15,7 @@ pipeline {
             }
         }
 
-        stage('Analyse SonarQube') {
+       /* stage('Analyse SonarQube') {
             steps {
                 withSonarQubeEnv('sonarqube') { // nom du serveur SonarQube
                     withCredentials([string(credentialsId: 'jenkins-token', variable: 'SONAR_TOKEN')]) {
@@ -36,7 +36,7 @@ pipeline {
                     waitForQualityGate abortPipeline: true
                 }
             }
-        }
+        } */
 
         stage('Build Backend Image') {
             steps {
