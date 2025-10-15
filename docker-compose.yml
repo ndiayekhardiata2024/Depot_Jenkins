@@ -10,6 +10,8 @@ services:
       - MONGO_URI=mongodb://mongo:27017/smartphoneDB
     depends_on:
       - mongo
+    networks:
+      - devops-net
 
   frontend:
     image: ndiaye2024/frontend:latest
@@ -17,6 +19,8 @@ services:
       - "3000:80"
     environment:
       - VITE_API_URL=http://backend:5000/api 
+    networks:
+      - devops-net
 
   mongo:
     image: mongo:5
@@ -24,6 +28,8 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
+    networks:
+      - devops-net
 
   jenkins:
     image: jenkins/jenkins:lts
@@ -31,11 +37,16 @@ services:
       - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-       # 💡 kubeconfig de ton cluster
-      - ./jenkins-kubeconfig.yaml:/root/.kube/config
+      - ./jenkins-kubeconfig.yaml:/root/.kube/config  # 💡 kubeconfig de ton cluster
       - ./jenkins_home:/var/jenkins_home
     user: root
     restart: unless-stopped
+    networks:
+      - devops-net
 
 volumes:
   mongo-data:
+
+networks:
+  devops-net:
+    external: true
