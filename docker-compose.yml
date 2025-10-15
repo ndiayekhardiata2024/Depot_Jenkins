@@ -31,7 +31,8 @@ services:
       - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ~/.kube:/root/.kube  # 💡 kubeconfig de ton cluster
+       # 💡 kubeconfig de ton cluster
+      - ./jenkins-kubeconfig.yaml:/root/.kube/config
       - ./jenkins_home:/var/jenkins_home
     user: root
     restart: unless-stopped
