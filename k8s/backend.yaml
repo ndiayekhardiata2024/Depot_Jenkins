@@ -16,7 +16,7 @@ spec:
         - name: backend
           image: ndiaye2024/backend:latest
           ports:
-            - containerPort: 3000
+            - containerPort: 5000
          # livenessProbe:
          #   httpGet:
          #     path: /health
@@ -33,6 +33,6 @@ spec:
   selector:
     app: backend
   ports:
-    - port: 3000
-      targetPort: 3000
+    - port: 5000
+      targetPort: 5000
       nodePort: 32000
