@@ -11,7 +11,7 @@ services:
     depends_on:
       - mongo
     networks:
-      - devops-net
+      - filrouge
 
   frontend:
     image: ndiaye2024/frontend:latest
@@ -20,7 +20,7 @@ services:
     environment:
       - VITE_API_URL=http://backend:5000/api 
     networks:
-      - devops-net
+      - filrouge
 
   mongo:
     image: mongo:5
@@ -29,8 +29,7 @@ services:
     volumes:
       - mongo-data:/data/db
     networks:
-      - devops-net
-
+      - filrouge
   jenkins:
     image: jenkins/jenkins:lts
     ports:
@@ -42,10 +41,12 @@ services:
     user: root
     restart: unless-stopped
     networks:
-      - devops-net
+      - filrouge
 
 volumes:
   mongo-data:
 
 networks:
-  - filrouge
+  filrouge:
+    external: true
+
