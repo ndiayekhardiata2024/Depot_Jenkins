@@ -79,10 +79,11 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 sh '''
+                    export KUBECONFIG=/root/.kube/config
                     kubectl apply -f k8s/ --validate=false --insecure-skip-tls-verify=true
-                    kubectl rollout status deployment/backend --insecure-skip-tls-verify=true
-                    kubectl rollout status deployment/frontend --insecure-skip-tls-verify=true
-                    kubectl rollout status deployment/mongo --insecure-skip-tls-verify=true
+                    kubectl rollout status deployment/backend 
+                    kubectl rollout status deployment/frontend 
+                    kubectl rollout status deployment/mongo 
                 '''
             }
         }
