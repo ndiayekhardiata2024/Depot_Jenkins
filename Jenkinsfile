@@ -87,12 +87,12 @@ pipeline {
                         --server=https://filrouge-cluster-control-plane:6443 \
                         --insecure-skip-tls-verify=true
 
-                    kubectl config set-credentials jenkins-user \
+                    kubectl config set-credentials jenkins \
                         --token=$KUBE_TOKEN
 
                     kubectl config set-context jenkins-context \
                         --cluster=kind-filrouge-cluster \
-                        --user=jenkins-user
+                        --user=jenkins
 
                     kubectl config use-context jenkins-context
 
