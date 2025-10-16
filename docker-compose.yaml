@@ -10,6 +10,12 @@ services:
       - MONGO_URI=mongodb://mongo:27017/smartphoneDB
     depends_on:
       - mongo
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
     networks:
       - filrouge
 
@@ -19,6 +25,9 @@ services:
       - "3000:80"
     environment:
       - VITE_API_URL=http://backend:5000/api 
+    depends_on:
+      - backend
+    restart: unless-stopped
     networks:
       - filrouge
 
@@ -28,8 +37,10 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
+    restart: unless-stopped
     networks:
       - filrouge
+
   jenkins:
     image: jenkins/jenkins:lts
     ports:
@@ -37,9 +48,11 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./kubeconfig_jenkins.yaml:/root/.kube/config
-       # - /home/sara/.kube:/root/.kube:ro
       - ./jenkins_home:/var/jenkins_home
     user: root
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     restart: unless-stopped
     networks:
       - filrouge
@@ -50,4 +63,3 @@ volumes:
 networks:
   filrouge:
     external: true
-
