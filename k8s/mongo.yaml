@@ -25,7 +25,7 @@ spec:
               command:
                 - mongo
                 - --eval
-                - db.runCommand({ ping: 1 })
+                - 'db.runCommand({ ping: 1 })'
             initialDelaySeconds: 5
             periodSeconds: 10
       volumes:
