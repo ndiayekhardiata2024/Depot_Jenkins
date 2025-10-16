@@ -3,13 +3,21 @@ pipeline {
 
     environment {
         DOCKER_HUB_REPO = 'ndiaye2024'
+        KUBE_TOKEN = credentials('kube-token') // 🔐 Token Kubernetes injecté
     }
 
     stages {
 
         stage('Checkout') {
             steps {
-                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-jenkins', url: 'https://github.com/ndiayekhardiata2024/Depot_Jenkins.git']])
+                checkout scmGit(
+                    branches: [[name: '*/main']],
+                    extensions: [],
+                    userRemoteConfigs: [[
+                        credentialsId: 'github-jenkins',
+                        url: 'https://github.com/ndiayekhardiata2024/Depot_Jenkins.git'
+                    ]]
+                )
             }
         }
 
@@ -39,17 +47,13 @@ pipeline {
 
         stage('Build Backend Image') {
             steps {
-                script {
-                    sh "docker build -t ${DOCKER_HUB_REPO}/backend:latest ./mon-projet-express"
-                }
+                sh "docker build -t ${DOCKER_HUB_REPO}/backend:latest ./mon-projet-express"
             }
         }
 
         stage('Build Frontend Image') {
             steps {
-                script {
-                    sh "docker build -t ${DOCKER_HUB_REPO}/frontend:latest ./"
-                }
+                sh "docker build -t ${DOCKER_HUB_REPO}/frontend:latest ./"
             }
         }
 
@@ -69,33 +73,44 @@ pipeline {
 
         stage('Push Images') {
             steps {
-                script {
-                    sh "docker push ${DOCKER_HUB_REPO}/backend:latest"
-                    sh "docker push ${DOCKER_HUB_REPO}/frontend:latest"
-                }
+                sh "docker push ${DOCKER_HUB_REPO}/backend:latest"
+                sh "docker push ${DOCKER_HUB_REPO}/frontend:latest"
             }
         }
 
         stage('Deploy to Kubernetes') {
             steps {
                 sh '''
-                    #export KUBECONFIG=/root/.kube/config
-                    kubectl apply -f k8s/ --validate=false --insecure-skip-tls-verify=true
-                    kubectl rollout status deployment/backend 
-                    kubectl rollout status deployment/frontend 
-                    kubectl rollout status deployment/mongo 
+                    echo "🔧 Configuration de kubectl pour Jenkins..."
+
+                    kubectl config set-cluster kind-filrouge-cluster \
+                        --server=https://filrouge-cluster-control-plane:6443 \
+                        --insecure-skip-tls-verify=true
+
+                    kubectl config set-credentials jenkins-user \
+                        --token=$KUBE_TOKEN
+
+                    kubectl config set-context jenkins-context \
+                        --cluster=kind-filrouge-cluster \
+                        --user=jenkins-user
+
+                    kubectl config use-context jenkins-context
+
+                    echo "🚀 Déploiement sur Kubernetes..."
+                    kubectl apply -f k8s/ --validate=false
+                    kubectl rollout status deployment/backend
+                    kubectl rollout status deployment/frontend
+                    kubectl rollout status deployment/mongo
                 '''
             }
         }
 
         /* stage('Deploy with Docker Compose') {
             steps {
-                script {
-                    sh 'docker compose down || true'
-                    sh 'docker compose up -d'
-                }
+                sh 'docker compose down || true'
+                sh 'docker compose up -d'
             }
-        }*/
+        } */
     }
 
     post {
