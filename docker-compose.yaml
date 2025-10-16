@@ -37,7 +37,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
      # - ./kubeconfig_jenkins.yaml:/root/.kube/config
-      - ~/.kube:/root/.kube
+      - /home/sara/.kube:/root/.kube:ro
       - ./jenkins_home:/var/jenkins_home
     user: root
     restart: unless-stopped
