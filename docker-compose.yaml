@@ -36,8 +36,8 @@ services:
       - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-     # - ./kubeconfig_jenkins.yaml:/root/.kube/config
-      - /home/sara/.kube:/root/.kube:ro
+      - ./kubeconfig_jenkins.yaml:/root/.kube/config
+       # - /home/sara/.kube:/root/.kube:ro
       - ./jenkins_home:/var/jenkins_home
     user: root
     restart: unless-stopped
