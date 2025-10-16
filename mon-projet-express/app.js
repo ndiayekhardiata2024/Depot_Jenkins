@@ -24,4 +24,7 @@ app.use('/api', smartphoneRoutes);
 
 // Lancer le serveur
 const PORT = process.env.PORT || 5000;
+// Route pour la liveness probe
+app.get('/health', (req, res) => res.sendStatus(200));
+
 app.listen(PORT, '0.0.0.0', () => console.log(`Serveur lancé sur http://localhost:${PORT}`));
