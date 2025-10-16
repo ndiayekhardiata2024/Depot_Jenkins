@@ -22,7 +22,7 @@ spec:
                 name: backend-env   # <- injection des variables du .env
           livenessProbe:
             httpGet:
-              path: /health
+              path: /ready
               port: 5000          # <- port corrigé
             initialDelaySeconds: 5
             periodSeconds: 10
