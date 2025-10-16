@@ -53,7 +53,6 @@ pipeline {
 
         stage('Build Frontend Image') {
             steps {
-                sleep 5
                 sh "docker build -t ${DOCKER_HUB_REPO}/frontend:latest ./"
             }
         }
