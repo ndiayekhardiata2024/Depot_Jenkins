@@ -16,9 +16,13 @@ const app = express();
 app.use(express.json({ limit: "10mb" }));
 
 app.use(cors({
-  origin: 'http://filrouge.local:30080', // autoriser ton frontend
+  origin: [
+    'http://localhost:30000',
+    'http://filrouge.local:30080'
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true // si tu gères des cookies ou sessions
+  credentials: true
+}));als: true // si tu gères des cookies ou sessions
 }));
 
 
