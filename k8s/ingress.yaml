@@ -2,7 +2,9 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: filrouge-ingress
-  annotations: {}  # ✅ Supprime la réécriture
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   rules:
     - host: filrouge.local
@@ -15,8 +17,8 @@ spec:
                 name: frontend-service
                 port:
                   number: 80
-          - path: /backend
-            pathType: Prefix
+          - path: /backend(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: backend-service
