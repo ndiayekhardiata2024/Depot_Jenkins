@@ -3,14 +3,14 @@ kind: Ingress
 metadata:
   name: filrouge-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   rules:
     - host: filrouge.local
       http:
         paths:
-          - path: /frontend
-            pathType: Prefix
+          - path: /frontend(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: frontend-service
