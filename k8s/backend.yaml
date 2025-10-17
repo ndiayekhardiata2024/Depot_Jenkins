@@ -19,11 +19,11 @@ spec:
             - containerPort: 5000
           envFrom:
             - configMapRef:
-                name: backend-env   # <- injection des variables du .env
+                name: backend-env   # ✅ Injecte les variables d'environnement
           livenessProbe:
             httpGet:
               path: /health
-              port: 5000          # <- port corrigé
+              port: 5000
             initialDelaySeconds: 5
             periodSeconds: 10
 ---
