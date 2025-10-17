@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         DOCKER_HUB_REPO = 'ndiaye2024'
+        KUBECONFIG = "/var/jenkins_home/.kube/config"
         KUBE_TOKEN = credentials('kube-token') // 🔐 Token Kubernetes injecté
     }
 
