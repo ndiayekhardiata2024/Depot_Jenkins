@@ -19,16 +19,16 @@ spec:
             - containerPort: 80
           env:
             - name: REACT_APP_API_URL
-              value: http://backend:5000   # ✅ URL backend interne
+              value: http://backend:5000
           livenessProbe:
             httpGet:
-              path: /health
+              path: /index.html
               port: 80
             initialDelaySeconds: 5
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: /health
+              path: /index.html   # ✅ change ici
               port: 80
             initialDelaySeconds: 3
             periodSeconds: 5
