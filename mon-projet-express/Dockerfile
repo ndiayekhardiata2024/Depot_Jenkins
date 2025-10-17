@@ -22,4 +22,4 @@ ENV DELETE_CODE=123
 EXPOSE 5000
 
 # 8. Commande pour démarrer ton serveur Express
-CMD ["npm", "start"]
+CMD ["npm", "app.js"]
