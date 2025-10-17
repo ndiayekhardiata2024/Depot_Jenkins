@@ -18,8 +18,8 @@ spec:
           ports:
             - containerPort: 80
           env:
-            - name: REACT_APP_API_URL
-              value: http://backend:5000
+            - name: VITE_API_URL
+              value: http://172.19.0.2:30001/api
           livenessProbe:
             httpGet:
               path: /
