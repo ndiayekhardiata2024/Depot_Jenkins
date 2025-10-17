@@ -10,8 +10,8 @@ spec:
     - host: filrouge.local
       http:
         paths:
-          - path: /frontend
-            pathType: Prefix
+          - path: /frontend(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: frontend-service
