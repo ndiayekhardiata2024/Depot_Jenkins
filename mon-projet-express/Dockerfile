@@ -1,5 +1,5 @@
 # 1. Utiliser une image de base complète (pas Alpine)
-FROM node:18
+FROM node:20-alpine
 
 # 2. Créer un dossier de travail dans le conteneur
 WORKDIR /app
