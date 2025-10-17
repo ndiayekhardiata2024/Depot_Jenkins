@@ -3,5 +3,6 @@ kind: ConfigMap
 metadata:
   name: backend-env
 data:
-  MONGO_URL: mongodb://mongo-service:27017/filrouge
   PORT: "5000"
+  MONGO_URI: "mongodb://mongo-service:27017/smartphoneDB"
+  DELETE_CODE: "123"
