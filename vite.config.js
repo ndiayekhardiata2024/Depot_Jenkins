@@ -1,11 +1,11 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  base: '/frontend/', // ✅ nécessaire pour Ingress
   server: {
     host: '0.0.0.0',
-    port: 3000, // correspond au port interne exposé dans Docker
+    port: 3000,
   }
 })
