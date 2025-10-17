@@ -81,21 +81,6 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 sh '''
-                    echo "🔧 Configuration de kubectl pour Jenkins..."
-
-                    kubectl config set-cluster kind-filrouge-cluster \
-                        --server=https://filrouge-cluster-control-plane:6443 \
-                        --insecure-skip-tls-verify=true
-
-                    kubectl config set-credentials jenkins-user \
-                        --token=$KUBE_TOKEN
-
-                    kubectl config set-context jenkins-context \
-                        --cluster=kind-filrouge-cluster \
-                        --user=jenkins-user
-
-                    kubectl config use-context jenkins-context
-
                     echo "🚀 Déploiement sur Kubernetes..."
                     kubectl apply -f k8s/ --validate=false
                     kubectl rollout status deployment/backend
