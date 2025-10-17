@@ -21,6 +21,6 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: backend-service
+                name: backend
                 port:
                   number: 5000
