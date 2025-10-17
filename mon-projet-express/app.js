@@ -18,7 +18,7 @@ app.use(express.json({ limit: "10mb" }));
 app.use(cors());
 
 // Routes API
-app.use('/api/products', require('./routes/smartphoneroute'));
+app.use('/api', require('./routes/smartphoneroute'));
 
 
 // Route pour la liveness probe
