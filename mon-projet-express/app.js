@@ -13,7 +13,7 @@ connectDB();
 const app = express();
 
 // Autoriser un body JSON plus gros (ex: 10mb)
-app.use(express.json({ limit: "10mb" }));
+app.use(express.json({ limit: "50mb" }));
 
 // Middleware de traçage pour voir les requêtes reçues
 app.use((req, res, next) => {
