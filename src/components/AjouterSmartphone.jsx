@@ -36,9 +36,8 @@ function AjouterSmartphone({ ajouterSmartphone, onCancel }) {
     }
 
     const reader = new FileReader();
-    reader.onload = () => {
+    reader.onload = async () => {
       const nouveauSmartphone = {
-        id: Date.now(),
         nom: form.nom,
         marque: form.marque,
         prix: Number(form.prix),
@@ -48,24 +47,39 @@ function AjouterSmartphone({ ajouterSmartphone, onCancel }) {
           rom: form.rom,
           ecran: form.ecran
         },
-        photos: [reader.result],
+        photos: [reader.result], // image en base64
         couleurs: form.couleurs
       };
 
-      ajouterSmartphone(nouveauSmartphone);
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/smartphones`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(nouveauSmartphone)
+        });
 
-      setForm({
-        nom: "",
-        marque: "",
-        prix: "",
-        description: "",
-        ram: "",
-        rom: "",
-        ecran: "",
-        photo: null,
-        couleurs: []
-      });
+        if (!response.ok) {
+          throw new Error("Erreur lors de l'ajout");
+        }
+
+        ajouterSmartphone(nouveauSmartphone); // Optionnel : mise à jour locale
+        setForm({
+          nom: "",
+          marque: "",
+          prix: "",
+          description: "",
+          ram: "",
+          rom: "",
+          ecran: "",
+          photo: null,
+          couleurs: []
+        });
+      } catch (error) {
+        console.error("Erreur :", error);
+        alert("Échec de l'ajout du smartphone.");
+      }
     };
+
     reader.readAsDataURL(form.photo);
   };
 
@@ -78,100 +92,49 @@ function AjouterSmartphone({ ajouterSmartphone, onCancel }) {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <label className="block mb-1 font-medium">Nom</label>
-              <input
-                name="nom"
-                value={form.nom}
-                onChange={handleChange}
-                className="w-full p-2 border rounded"
-                required
-              />
+              <input name="nom" value={form.nom} onChange={handleChange} className="w-full p-2 border rounded" required />
             </div>
-
             <div>
               <label className="block mb-1 font-medium">Marque</label>
-              <input
-                name="marque"
-                value={form.marque}
-                onChange={handleChange}
-                className="w-full p-2 border rounded"
-                required
-              />
+              <input name="marque" value={form.marque} onChange={handleChange} className="w-full p-2 border rounded" required />
             </div>
           </div>
 
           <div>
             <label className="block mb-1 font-medium">Description</label>
-            <textarea
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-            />
+            <textarea name="description" value={form.description} onChange={handleChange} className="w-full p-2 border rounded" />
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <label className="block mb-1 font-medium">Prix</label>
-              <input
-                type="number"
-                name="prix"
-                value={form.prix}
-                onChange={handleChange}
-                className="w-full p-2 border rounded"
-                required
-              />
+              <input type="number" name="prix" value={form.prix} onChange={handleChange} className="w-full p-2 border rounded" required />
             </div>
             <div>
               <label className="block mb-1 font-medium">Photo</label>
-              <input
-                name="photo"
-                type="file"
-                accept="image/*"
-                onChange={handleChange}
-                className="w-full p-2 border rounded"
-              />
+              <input name="photo" type="file" accept="image/*" onChange={handleChange} className="w-full p-2 border rounded" />
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <label className="block mb-1 font-medium">RAM (Go)</label>
-              <input
-                name="ram"
-                value={form.ram}
-                onChange={handleChange}
-                className="w-full p-2 border rounded"
-              />
+              <input name="ram" value={form.ram} onChange={handleChange} className="w-full p-2 border rounded" />
             </div>
             <div>
               <label className="block mb-1 font-medium">ROM (Go)</label>
-              <input
-                name="rom"
-                value={form.rom}
-                onChange={handleChange}
-                className="w-full p-2 border rounded"
-              />
+              <input name="rom" value={form.rom} onChange={handleChange} className="w-full p-2 border rounded" />
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <label className="block mb-1 font-medium">Écran</label>
-              <input
-                name="ecran"
-                value={form.ecran}
-                onChange={handleChange}
-                className="w-full p-2 border rounded"
-              />
+              <input name="ecran" value={form.ecran} onChange={handleChange} className="w-full p-2 border rounded" />
             </div>
             <div>
               <label className="block mb-1 font-medium">Couleurs</label>
-              <select
-                multiple
-                value={form.couleurs}
-                onChange={handleColors}
-                className="w-full p-2 border rounded"
-              >
+              <select multiple value={form.couleurs} onChange={handleColors} className="w-full p-2 border rounded">
                 <option value="#FF0000">Rouge</option>
                 <option value="#00FF00">Vert</option>
                 <option value="#0000FF">Bleu</option>
@@ -183,30 +146,18 @@ function AjouterSmartphone({ ajouterSmartphone, onCancel }) {
           </div>
 
           <div className="flex justify-between mt-6">
-            <button
-              type="button"
-              onClick={onCancel}
-              className="px-4 py-2 text-white bg-gray-400 rounded hover:bg-gray-500"
-            >
+            <button type="button" onClick={onCancel} className="px-4 py-2 text-white bg-gray-400 rounded hover:bg-gray-500">
               Annuler
             </button>
-            <button
-              type="submit"
-              className="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
-            >
+            <button type="submit" className="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700">
               Ajouter
             </button>
           </div>
         </form>
 
-        {/*  Image fixe à droite */}
+        {/* Image fixe à droite */}
         <div className="flex items-center justify-center">
-           <img
-               src={smartphoneImg}
-               alt="Smartphone fixe"
-               className="object-contain w-80 h-[600px] rounded-lg shadow-md"
-          />
-
+          <img src={smartphoneImg} alt="Smartphone fixe" className="object-contain w-80 h-[600px] rounded-lg shadow-md" />
         </div>
       </div>
     </div>
