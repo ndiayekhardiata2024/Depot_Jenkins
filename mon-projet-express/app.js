@@ -18,8 +18,7 @@ app.use(express.json({ limit: "10mb" }));
 // Configuration CORS
 app.use(cors({
   origin: [
-    'http://localhost:30000',
-    'http://filrouge.local:30080'
+    'http://localhost:30000'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true // si tu gères des cookies ou sessions
