@@ -5,8 +5,7 @@ import DetaillerSmartphone from "./DetaillerSmartphone.jsx";
 import EditerSmartphone from "./EditerSmartphone.jsx";
 
 // Backend Express
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/smartphones';
 
 
 function Classe() {
