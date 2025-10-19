@@ -74,10 +74,7 @@ function AjouterSmartphone({ ajouterSmartphone, onCancel }) {
           photo: null,
           couleurs: []
         });
-      } catch (error) {
-        console.error("Erreur :", error);
-        alert("Échec de l'ajout du smartphone.");
-      }
+      } 
     };
 
     reader.readAsDataURL(form.photo);
