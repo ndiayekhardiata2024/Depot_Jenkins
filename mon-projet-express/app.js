@@ -15,23 +15,30 @@ const app = express();
 // Autoriser un body JSON plus gros (ex: 10mb)
 app.use(express.json({ limit: "10mb" }));
 
+// Middleware de traçage pour voir les requêtes reçues
+app.use((req, res, next) => {
+  console.log(`➡️ Requête reçue : ${req.method} ${req.url}`);
+  next();
+});
+
 // Configuration CORS
 app.use(cors({
   origin: [
     'http://filrouge.local:30080',
     'http://localhost:30000'
-    
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true // si tu gères des cookies ou sessions
+  credentials: true
 }));
 
 // Routes API
-app.use('/', smartphoneRoutes);
+app.use('/', smartphoneRoutes); // PAS '/api' car Ingress réécrit déjà
 
 // Route pour la liveness probe
 app.get('/health', (req, res) => res.sendStatus(200));
 
 // Lancer le serveur
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, '0.0.0.0', () => console.log(`Serveur lancé sur http://0.0.0.0:${PORT}`));
+app.listen(PORT, '0.0.0.0', () =>
+  console.log(`✅ Serveur lancé sur http://0.0.0.0:${PORT}`)
+);
