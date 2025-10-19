@@ -19,7 +19,7 @@ spec:
             - containerPort: 80
           env:
             - name: VITE_API_URL
-              value: "http://localhost:32001/api"
+              value: "http://backend:5000/api"
           livenessProbe:
             httpGet:
               path: /
