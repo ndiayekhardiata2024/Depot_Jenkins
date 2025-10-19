@@ -15,22 +15,18 @@ const app = express();
 // Autoriser un body JSON plus gros (ex: 10mb)
 app.use(express.json({ limit: "10mb" }));
 
+// Configuration CORS
 app.use(cors({
   origin: [
     'http://localhost:30000',
     'http://filrouge.local:30080'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
-}));als: true // si tu gères des cookies ou sessions
+  credentials: true // si tu gères des cookies ou sessions
 }));
 
-
 // Routes API
-app.use('/api', require('./routes/smartphoneroute'));
-
-
-
+app.use('/api', smartphoneRoutes);
 
 // Route pour la liveness probe
 app.get('/health', (req, res) => res.sendStatus(200));
