@@ -27,7 +27,7 @@ app.use(cors({
 }));
 
 // Routes API
-app.use('/', smartphoneRoutes);
+app.use('/api', smartphoneRoutes);
 
 // Route pour la liveness probe
 app.get('/health', (req, res) => res.sendStatus(200));
