@@ -47,7 +47,7 @@ function AjouterSmartphone({ ajouterSmartphone, onCancel }) {
           rom: form.rom,
           ecran: form.ecran
         },
-        photos: [reader.result], // image en base64
+        photos: [reader.result],
         couleurs: form.couleurs
       };
 
@@ -62,7 +62,7 @@ function AjouterSmartphone({ ajouterSmartphone, onCancel }) {
           throw new Error("Erreur lors de l'ajout");
         }
 
-        ajouterSmartphone(nouveauSmartphone); // Optionnel : mise à jour locale
+        ajouterSmartphone(nouveauSmartphone);
         setForm({
           nom: "",
           marque: "",
@@ -74,7 +74,10 @@ function AjouterSmartphone({ ajouterSmartphone, onCancel }) {
           photo: null,
           couleurs: []
         });
-      } 
+      } catch (error) {
+        console.error("Erreur :", error);
+        alert("Échec de l'ajout du smartphone.");
+      }
     };
 
     reader.readAsDataURL(form.photo);
