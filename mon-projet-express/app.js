@@ -32,7 +32,7 @@ app.use(cors({
 }));
 
 // Routes API
-app.use('/', smartphoneRoutes); // PAS '/api' car Ingress réécrit déjà
+app.use('/api', smartphoneRoutes); // PAS '/api' car Ingress réécrit déjà
 
 // Route pour la liveness probe
 app.get('/health', (req, res) => res.sendStatus(200));
