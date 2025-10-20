@@ -4,7 +4,10 @@ pipeline {
     environment {
         DOCKER_HUB_REPO = 'ndiaye2024'
         KUBECONFIG = "/var/jenkins_home/.kube/config"
-        KUBE_TOKEN = credentials('kube-token') // 🔐 Token Kubernetes injecté
+        KUBE_TOKEN = credentials('kube-token')
+        AWS_ACCESS_KEY_ID     = credentials('aws-access-key')
+        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
+        AWS_DEFAULT_REGION    = 'eu-west-3'
     }
 
     stages {
@@ -79,7 +82,23 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
+        stage('Deploy Infra AWS') {
+            agent {
+                docker {
+                    image 'hashicorp/terraform:1.6.6'
+                    args '-u root'
+                }
+            }
+            steps {
+                dir('infra') {
+                    sh 'terraform init'
+                    sh 'terraform plan -var-file=terraform.tfvars'
+                    sh 'terraform apply -auto-approve -var-file=terraform.tfvars'
+                }
+            }
+        }
+
+        /* stage('Deploy to Kubernetes') {
             steps {
                 sh '''
                     echo "🚀 Déploiement sur Kubernetes..."
@@ -89,7 +108,7 @@ pipeline {
                     kubectl rollout status deployment/mongo
                 '''
             }
-        }
+        }  */
 
         /* stage('Deploy with Docker Compose') {
             steps {
