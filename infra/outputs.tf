@@ -1,7 +1,7 @@
-output "instance_id" {
+output "ec2_instance_id" {
   value = aws_instance.web.id
 }
 
-output "db_endpoint" {
-  value = aws_db_instance.db.endpoint
+output "dynamodb_table_name" {
+  value = aws_dynamodb_table.users.name
 }
