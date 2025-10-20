@@ -1,7 +1,3 @@
-region         = "eu-west-3"
-vpc_cidr       = "10.0.0.0/16"
-subnet_cidr    = "10.0.1.0/24"
-ami_id         = "ami-0abcdef1234567890"
-instance_type  = "t2.micro"
-db_user        = "admin"
-db_pass        = "password123"
+region         = "us-east-1"
+ami_id         = "ami-0c02fb55956c7d316"  # Amazon Linux 2 (us-east-1)
+instance_type  = "t3.micro"              # autorisé dans le sandbox
