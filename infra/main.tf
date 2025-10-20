@@ -1,36 +1,31 @@
-# 🔧 Déclare le provider AWS (nécessaire pour dire à Terraform sur quel cloud travailler)
+# 🔧 Provider AWS
 provider "aws" {
-  region = var.region  # La région AWS est définie dans terraform.tfvars
+  region = var.region
 }
 
-# 🌐 Crée un VPC (réseau privé virtuel)
-resource "aws_vpc" "main" {
-  cidr_block = var.vpc_cidr  # Plage d’adresses IP pour ton réseau
-}
-
-# 🧩 Crée un sous-réseau public dans le VPC
-resource "aws_subnet" "public" {
-  vpc_id     = aws_vpc.main.id  # Le VPC auquel ce subnet appartient
-  cidr_block = var.subnet_cidr  # Plage IP du subnet
-}
-
-# 💻 Crée une instance EC2 (machine virtuelle)
+# 💻 EC2 Instance (dans le VPC par défaut)
 resource "aws_instance" "web" {
-  ami           = var.ami_id         # ID de l’image AMI (Ubuntu, Amazon Linux, etc.)
-  instance_type = var.instance_type  # Type d’instance (ex. : t2.micro)
-  subnet_id     = aws_subnet.public.id  # Le subnet dans lequel l’instance sera lancée
+  ami                    = var.ami_id
+  instance_type          = var.instance_type
+  iam_instance_profile   = "LabInstanceProfile"  # ← Respecte les restrictions IAM
 
   tags = {
-    Name = "WebServer"  # Nom de l’instance (utile pour la retrouver dans la console AWS)
+    Name = "SandboxEC2"
   }
 }
 
-# 🗄️ Crée une base de données RDS (MySQL)
-resource "aws_db_instance" "db" {
-  allocated_storage    = 20              # Taille du disque en Go
-  engine               = "mysql"         # Type de base de données
-  instance_class       = "db.t3.micro"   # Type d’instance RDS
-  username             = var.db_user     # Nom d’utilisateur de la BDD
-  password             = var.db_pass     # Mot de passe de la BDD
-  skip_final_snapshot  = true            # Ne pas créer de snapshot à la suppression
+# 🗄️ DynamoDB Table
+resource "aws_dynamodb_table" "users" {
+  name           = "UsersTable"
+  billing_mode   = "PAY_PER_REQUEST"
+  hash_key       = "user_id"
+
+  attribute {
+    name = "user_id"
+    type = "S"
+  }
+
+  tags = {
+    Environment = "Sandbox"
+  }
 }
