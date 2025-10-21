@@ -157,8 +157,8 @@ pipeline {
             )
         }
 
-        always {
+       /* always {
             sh 'docker logout'
-        }
+        } */
     }
 }
