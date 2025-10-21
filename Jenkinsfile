@@ -10,6 +10,10 @@ pipeline {
         AWS_DEFAULT_REGION    = 'us-west-2'
     }
 
+    options {
+        timestamps()
+    }
+
     stages {
 
         stage('Checkout') {
@@ -51,12 +55,14 @@ pipeline {
 
         stage('Build Backend Image') {
             steps {
+                echo '🔧 Build Backend'
                 sh "docker build -t ${DOCKER_HUB_REPO}/backend:latest ./mon-projet-express"
             }
         }
 
         stage('Build Frontend Image') {
             steps {
+                echo '🔧 Build Frontend'
                 sh "docker build -t ${DOCKER_HUB_REPO}/frontend:latest ./"
             }
         }
@@ -68,6 +74,7 @@ pipeline {
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
+                    echo '🔐 Docker login'
                     sh '''
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                     '''
@@ -77,6 +84,7 @@ pipeline {
 
         stage('Push Images') {
             steps {
+                echo '📤 Push Docker images'
                 sh "docker push ${DOCKER_HUB_REPO}/backend:latest"
                 sh "docker push ${DOCKER_HUB_REPO}/frontend:latest"
             }
@@ -84,6 +92,7 @@ pipeline {
 
         stage('Deploy Infra AWS') {
             steps {
+                echo '🚀 Déploiement Terraform'
                 dir('infra') {
                     sh 'terraform init'
                     sh 'terraform plan -var-file=terraform.tfvars'
@@ -113,6 +122,7 @@ pipeline {
 
         stage('Cleanup Docker') {
             steps {
+                echo '🧹 Docker logout'
                 sh 'docker logout || true'
             }
         }
@@ -154,7 +164,7 @@ pipeline {
         }
 
         always {
-            echo 'Post actions terminées.'
+            echo '✅ Post actions terminées.'
         }
     }
 }
