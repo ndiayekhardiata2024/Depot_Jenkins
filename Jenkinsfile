@@ -120,6 +120,13 @@ pipeline {
                 sh 'docker compose up -d'
             }
         } */
+
+        stage('Cleanup Docker') {
+            agent any
+            steps {
+                sh 'docker logout'
+            }
+        }
     }
 
     post {
@@ -157,8 +164,8 @@ pipeline {
             )
         }
 
-       /* always {
-            sh 'docker logout'
-        } */
+        always {
+            echo 'Post actions terminées.'
+        }
     }
 }
