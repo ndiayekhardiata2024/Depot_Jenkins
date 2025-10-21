@@ -4,14 +4,7 @@ pipeline {
     environment {
         DOCKER_HUB_REPO = 'ndiaye2024'
         KUBECONFIG = "/var/jenkins_home/.kube/config"
-        KUBE_TOKEN = credentials('kube-token')
-        AWS_ACCESS_KEY_ID     = credentials('aws-access-key')
-        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
-        AWS_DEFAULT_REGION    = 'us-west-2'
-    }
-
-    options {
-        timestamps()
+        KUBE_TOKEN = credentials('kube-token') // 🔐 Token Kubernetes injecté
     }
 
     stages {
@@ -55,14 +48,12 @@ pipeline {
 
         stage('Build Backend Image') {
             steps {
-                echo '🔧 Build Backend'
                 sh "docker build -t ${DOCKER_HUB_REPO}/backend:latest ./mon-projet-express"
             }
         }
 
         stage('Build Frontend Image') {
             steps {
-                echo '🔧 Build Frontend'
                 sh "docker build -t ${DOCKER_HUB_REPO}/frontend:latest ./"
             }
         }
@@ -74,7 +65,6 @@ pipeline {
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
-                    echo '🔐 Docker login'
                     sh '''
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                     '''
@@ -84,24 +74,12 @@ pipeline {
 
         stage('Push Images') {
             steps {
-                echo '📤 Push Docker images'
                 sh "docker push ${DOCKER_HUB_REPO}/backend:latest"
                 sh "docker push ${DOCKER_HUB_REPO}/frontend:latest"
             }
         }
 
-        stage('Deploy Infra AWS') {
-            steps {
-                echo '🚀 Déploiement Terraform'
-                dir('infra') {
-                    sh 'terraform init'
-                    sh 'terraform plan -var-file=terraform.tfvars'
-                    sh 'terraform apply -auto-approve -var-file=terraform.tfvars'
-                }
-            }
-        }
-
-        /* stage('Deploy to Kubernetes') {
+     /*    stage('Deploy to Kubernetes') {
             steps {
                 sh '''
                     echo "🚀 Déploiement sur Kubernetes..."
@@ -111,21 +89,14 @@ pipeline {
                     kubectl rollout status deployment/mongo
                 '''
             }
-        }
+        } */
 
-        stage('Deploy with Docker Compose') {
+        /* stage('Deploy with Docker Compose') {
             steps {
                 sh 'docker compose down || true'
                 sh 'docker compose up -d'
             }
         } */
-
-        stage('Cleanup Docker') {
-            steps {
-                echo '🧹 Docker logout'
-                sh 'docker logout || true'
-            }
-        }
     }
 
     post {
@@ -164,7 +135,7 @@ pipeline {
         }
 
         always {
-            echo '✅ Post actions terminées.'
+            sh 'docker logout'
         }
     }
 }
