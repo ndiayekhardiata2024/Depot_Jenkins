@@ -7,7 +7,7 @@ pipeline {
         KUBE_TOKEN = credentials('kube-token')
         AWS_ACCESS_KEY_ID     = credentials('aws-access-key')
         AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
-        AWS_DEFAULT_REGION    = 'eu-west-3'
+        AWS_DEFAULT_REGION    = 'us-west-2'
     }
 
     stages {
@@ -50,18 +50,21 @@ pipeline {
         } */
 
         stage('Build Backend Image') {
+            agent { node { label 'docker' } }
             steps {
                 sh "docker build -t ${DOCKER_HUB_REPO}/backend:latest ./mon-projet-express"
             }
         }
 
         stage('Build Frontend Image') {
+            agent { node { label 'docker' } }
             steps {
                 sh "docker build -t ${DOCKER_HUB_REPO}/frontend:latest ./"
             }
         }
 
         stage('Login to DockerHub') {
+            agent { node { label 'docker' } }
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: 'jenkinaute',
@@ -76,6 +79,7 @@ pipeline {
         }
 
         stage('Push Images') {
+            agent { node { label 'docker' } }
             steps {
                 sh "docker push ${DOCKER_HUB_REPO}/backend:latest"
                 sh "docker push ${DOCKER_HUB_REPO}/frontend:latest"
@@ -108,9 +112,9 @@ pipeline {
                     kubectl rollout status deployment/mongo
                 '''
             }
-        }  */
+        }
 
-        /* stage('Deploy with Docker Compose') {
+        stage('Deploy with Docker Compose') {
             steps {
                 sh 'docker compose down || true'
                 sh 'docker compose up -d'
