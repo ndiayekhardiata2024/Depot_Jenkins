@@ -50,21 +50,18 @@ pipeline {
         } */
 
         stage('Build Backend Image') {
-            agent { node { label 'docker' } }
             steps {
                 sh "docker build -t ${DOCKER_HUB_REPO}/backend:latest ./mon-projet-express"
             }
         }
 
         stage('Build Frontend Image') {
-            agent { node { label 'docker' } }
             steps {
                 sh "docker build -t ${DOCKER_HUB_REPO}/frontend:latest ./"
             }
         }
 
         stage('Login to DockerHub') {
-            agent { node { label 'docker' } }
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: 'jenkinaute',
@@ -79,28 +76,13 @@ pipeline {
         }
 
         stage('Push Images') {
-            agent { node { label 'docker' } }
             steps {
                 sh "docker push ${DOCKER_HUB_REPO}/backend:latest"
                 sh "docker push ${DOCKER_HUB_REPO}/frontend:latest"
             }
         }
 
-        // 🔐 Étape de nettoyage AVANT Terraform
-        stage('Cleanup Docker') {
-            agent any
-            steps {
-                sh 'docker logout'
-            }
-        }
-
         stage('Deploy Infra AWS') {
-            agent {
-                docker {
-                    image 'hashicorp/terraform:1.6.6'
-                    args '-u root'
-                }
-            }
             steps {
                 dir('infra') {
                     sh 'terraform init'
@@ -128,6 +110,12 @@ pipeline {
                 sh 'docker compose up -d'
             }
         } */
+
+        stage('Cleanup Docker') {
+            steps {
+                sh 'docker logout || true'
+            }
+        }
     }
 
     post {
