@@ -25,7 +25,8 @@ pipeline {
             }
         }
 
-        /* stage('Analyse SonarQube') {
+        /*
+        stage('Analyse SonarQube') {
             steps {
                 withSonarQubeEnv('sonarqube') {
                     withCredentials([string(credentialsId: 'jenkins-token', variable: 'SONAR_TOKEN')]) {
@@ -47,24 +48,25 @@ pipeline {
                     waitForQualityGate abortPipeline: true
                 }
             }
-        } */
+        }
+        */
 
         stage('Build Backend Image') {
-            agent { node { label 'docker' } }
+            agent { label 'docker' }
             steps {
                 sh "docker build -t ${DOCKER_HUB_REPO}/backend:latest ./mon-projet-express"
             }
         }
 
         stage('Build Frontend Image') {
-            agent { node { label 'docker' } }
+            agent { label 'docker' }
             steps {
                 sh "docker build -t ${DOCKER_HUB_REPO}/frontend:latest ./"
             }
         }
 
         stage('Login to DockerHub') {
-            agent { node { label 'docker' } }
+            agent { label 'docker' }
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: 'jenkinaute',
@@ -79,7 +81,7 @@ pipeline {
         }
 
         stage('Push Images') {
-            agent { node { label 'docker' } }
+            agent { label 'docker' }
             steps {
                 sh "docker push ${DOCKER_HUB_REPO}/backend:latest"
                 sh "docker push ${DOCKER_HUB_REPO}/frontend:latest"
@@ -102,7 +104,8 @@ pipeline {
             }
         }
 
-        /* stage('Deploy to Kubernetes') {
+        /*
+        stage('Deploy to Kubernetes') {
             steps {
                 sh '''
                     echo "🚀 Déploiement sur Kubernetes..."
@@ -119,7 +122,8 @@ pipeline {
                 sh 'docker compose down || true'
                 sh 'docker compose up -d'
             }
-        } */
+        }
+        */
     }
 
     post {
@@ -158,7 +162,9 @@ pipeline {
         }
 
         always {
-            sh 'docker logout'
+            node {
+                sh 'docker logout'
+            }
         }
     }
 }
