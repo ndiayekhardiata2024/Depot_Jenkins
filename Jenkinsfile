@@ -86,6 +86,14 @@ pipeline {
             }
         }
 
+        // 🔐 Étape de nettoyage AVANT Terraform
+        stage('Cleanup Docker') {
+            agent any
+            steps {
+                sh 'docker logout'
+            }
+        }
+
         stage('Deploy Infra AWS') {
             agent {
                 docker {
@@ -158,9 +166,7 @@ pipeline {
         }
 
         always {
-            script {
-                sh 'docker logout'
-            }
+            echo 'Post actions terminées.'
         }
     }
 }
