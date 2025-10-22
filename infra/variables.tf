@@ -23,11 +23,6 @@ variable "instance_type" {
   type        = string
 }
 
-variable "key_name" {
-  description = "Nom de la clé SSH (.pem) créée dans le sandbox"
-  type        = string
-}
-
 variable "db_user" {
   description = "Nom d’utilisateur de la base de données"
   type        = string
