@@ -91,8 +91,6 @@ resource "aws_instance" "web" {
 
   iam_instance_profile   = "LabInstanceProfile"  # Respecte les restrictions du sandbox
 
-  key_name               = var.key_name  # Clé SSH (.pem) créée dans le sandbox
-
   tags = {
     Name = "FilRouge-EC2"
   }
